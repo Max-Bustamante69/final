@@ -1,0 +1,5 @@
+scenario,input_bytes,output_bytes,wall_ms,cpu_ms,compress_ms,decompress_ms,encrypt_ms,decrypt_ms,io_wait_ms_est
+A_classic_copy,52428800.0,52428800.0,5.654,5.8,0.0,0.0,0.0,0.0,0.0
+B_compress_only,52428800.0,455786.0,19.3938,19.4,19.392,0.0,0.0,0.0,0.0
+C_compress_then_encrypt,52428800.0,455800.0,22.9882,23.0,18.9712,0.0,3.9764,0.0,0.0
+D_encrypt_then_compress,52428800.0,104447277.6,496.4244,496.6,35.421,0.0,459.4922,0.0,0.0

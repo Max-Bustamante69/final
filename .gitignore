@@ -1,0 +1,17 @@
+# Binarios y carpetas de salida
+bin/
+out/
+
+# Archivos temporales
+*.o
+*.obj
+*.exe
+*.log
+
+# Cache Python
+__pycache__/
+*.pyc
+
+# Entornos virtuales
+.venv/
+venv/
