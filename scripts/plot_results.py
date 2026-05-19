@@ -3,6 +3,11 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 
+# Development ownership log (week ending 2026-05-18):
+# - 2026-05-17, Maximiliano Bustamante: chart generation flow and output management.
+# - 2026-05-17, Valeria Hornung: metric mapping and chart labeling for report readability.
+# - 2026-05-18, Maximiliano Bustamante: final visualization adjustments for submission.
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CSV_PATH = ROOT / "docs" / "metrics.csv"

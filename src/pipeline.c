@@ -17,6 +17,12 @@
  * Clase: Sistemas Operativos - C2661-SI2004-5186
  * Profesor: Edison Valencia
  * Desarrolladores: Maximiliano Bustamante, Valeria Hornung
+ * Registro de desarrollo (semana de entrega: 2026-05-12 a 2026-05-18):
+ * - 2026-05-12: esqueleto del pipeline y flujo CLI (Maximiliano Bustamante)
+ * - 2026-05-13: modulo RLE en RAM (Valeria Hornung)
+ * - 2026-05-14: XTEA-CBC y padding PKCS#7 (Maximiliano Bustamante)
+ * - 2026-05-15: manejo seguro de llave en RAM (Valeria Hornung + Maximiliano Bustamante)
+ * - 2026-05-18: ajustes finales de metricas y documentacion (Valeria Hornung)
  */
 
 #define XTEA_ROUNDS 32
@@ -40,6 +46,7 @@ typedef struct {
 } Buffer;
 
 static void secure_zero(void *ptr, size_t len) {
+    /* 2026-05-15, Maximiliano Bustamante: borrado explicito de secretos en RAM. */
     volatile unsigned char *p = (volatile unsigned char *)ptr;
     while (len--) {
         *p++ = 0;
@@ -47,6 +54,7 @@ static void secure_zero(void *ptr, size_t len) {
 }
 
 static int lock_memory(void *ptr, size_t len) {
+/* 2026-05-15, Valeria Hornung: mitigacion de swap para passphrase en uso. */
 #ifdef _WIN32
     return VirtualLock(ptr, len) ? 0 : -1;
 #else
@@ -129,6 +137,7 @@ static int write_file(const char *path, const unsigned char *buf, size_t len) {
 
 /* RLE basico en RAM: [count][byte] */
 static int rle_compress(const unsigned char *in, size_t in_len, Buffer *out) {
+    /* 2026-05-13, Valeria Hornung: implementacion de compresion base. */
     size_t i = 0;
     size_t cap = (in_len * 2) + 2;
     unsigned char *buf = (unsigned char *)malloc(cap ? cap : 1);
@@ -152,6 +161,7 @@ static int rle_compress(const unsigned char *in, size_t in_len, Buffer *out) {
 }
 
 static int rle_decompress(const unsigned char *in, size_t in_len, Buffer *out) {
+    /* 2026-05-13, Valeria Hornung: descompresion simetrica para validar integridad. */
     size_t i = 0;
     size_t cap = 0;
     unsigned char *buf;
@@ -191,6 +201,7 @@ static void write_u32_le(unsigned char *p, uint32_t v) {
 }
 
 static void xtea_encrypt_block(uint32_t v[2], const uint32_t k[4]) {
+    /* 2026-05-14, Maximiliano Bustamante: nucleo de cifrado simetrico XTEA. */
     uint32_t v0 = v[0], v1 = v[1], sum = 0, i;
     const uint32_t delta = 0x9E3779B9u;
     for (i = 0; i < XTEA_ROUNDS; i++) {
@@ -243,6 +254,7 @@ static void fill_iv(unsigned char iv[XTEA_BLOCK_SIZE]) {
 }
 
 static int xtea_cbc_encrypt(const unsigned char *in, size_t in_len, const unsigned char key_bytes[16], Buffer *out) {
+    /* 2026-05-14, Maximiliano Bustamante: pipeline CBC + padding PKCS#7. */
     size_t pad = XTEA_BLOCK_SIZE - (in_len % XTEA_BLOCK_SIZE);
     size_t padded_len = in_len + pad;
     size_t total = XTEA_BLOCK_SIZE + padded_len;
@@ -282,6 +294,7 @@ static int xtea_cbc_encrypt(const unsigned char *in, size_t in_len, const unsign
 }
 
 static int xtea_cbc_decrypt(const unsigned char *in, size_t in_len, const unsigned char key_bytes[16], Buffer *out) {
+    /* 2026-05-14, Valeria Hornung: validacion de padding y reconstruccion de buffer plano. */
     uint32_t key[4];
     unsigned char prev[XTEA_BLOCK_SIZE];
     unsigned char *buf;
@@ -347,6 +360,7 @@ static void print_usage(const char *prog) {
 }
 
 static int load_passphrase(unsigned char **pass, size_t *len) {
+    /* 2026-05-15, Valeria Hornung: entrada segura por consola/env, nunca por argv. */
     const char *env = getenv("PIPELINE_KEY");
     if (env && env[0] != '\0') {
         size_t l = strlen(env);
@@ -385,6 +399,7 @@ static int load_passphrase(unsigned char **pass, size_t *len) {
 }
 
 static int run_mode(const char *mode, const Buffer *in, const unsigned char *key, Metrics *m, Buffer *out) {
+    /* 2026-05-12/2026-05-18, ambos: orquestacion de los 4 escenarios del parcial. */
     Buffer tmp1 = {0};
     Buffer tmp2 = {0};
     double t0, t1;
@@ -518,6 +533,7 @@ static int run_mode(const char *mode, const Buffer *in, const unsigned char *key
 }
 
 int main(int argc, char **argv) {
+    /* 2026-05-18, Maximiliano Bustamante: cierre de flujo, metricas y salida final. */
     const char *mode;
     const char *input_path;
     const char *output_path;

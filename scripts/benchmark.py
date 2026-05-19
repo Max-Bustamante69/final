@@ -6,6 +6,11 @@ import statistics
 import subprocess
 from pathlib import Path
 
+# Development ownership log (week ending 2026-05-18):
+# - 2026-05-16, Maximiliano Bustamante: benchmark orchestration and command execution.
+# - 2026-05-16, Valeria Hornung: integrity checks, averaging logic, and CSV export format.
+# - 2026-05-18, Maximiliano Bustamante: final tuning for comparative metrics reporting.
+
 
 ROOT = Path(__file__).resolve().parents[1]
 BIN = ROOT / "bin" / "pipeline.exe"

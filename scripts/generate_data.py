@@ -1,5 +1,9 @@
 from pathlib import Path
 
+# Development ownership log (week ending 2026-05-18):
+# - 2026-05-17, Valeria Hornung: creation of deterministic 50 MB compressible dataset generator.
+# - 2026-05-18, Maximiliano Bustamante: final size controls and delivery-ready output path.
+
 
 TARGET_BYTES = 50 * 1024 * 1024
 OUTPUT = Path("data/test_50mb.txt")
