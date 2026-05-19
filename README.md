@@ -25,6 +25,33 @@ Archivo principal: `src/pipeline.c`
   - Se destruye en RAM con borrado seguro (`secure_zero`) inmediatamente despues de derivar la llave.
 - **Buffers unificados en RAM:** las transformaciones se encadenan sin escribir a disco intermedio.
 
+## Development Timeline and Ownership
+
+Delivery date: **May 18, 2026**  
+Development window considered: **May 12 to May 18, 2026**
+
+1. **May 12, 2026 - Base architecture (`src/pipeline.c`)**
+   - **Maximiliano Bustamante**: project skeleton, CLI mode design, file I/O flow.
+   - **Valeria Hornung**: `Metrics`/`Buffer` structures and first RAM pipeline draft.
+2. **May 13, 2026 - Compression module**
+   - **Valeria Hornung**: `rle_compress` and `rle_decompress`.
+   - **Maximiliano Bustamante**: integration with mode dispatcher and error handling.
+3. **May 14, 2026 - Symmetric encryption**
+   - **Maximiliano Bustamante**: XTEA block cipher primitives and CBC chaining.
+   - **Valeria Hornung**: padding/unpadding checks and decode validation.
+4. **May 15, 2026 - Key safety in RAM**
+   - **Valeria Hornung**: passphrase input strategy (console/env).
+   - **Maximiliano Bustamante**: secure wipe and memory lock hooks (`secure_zero`, `VirtualLock`/`mlock` path).
+5. **May 16, 2026 - Benchmark automation**
+   - **Maximiliano Bustamante**: `scripts/benchmark.py` execution flow and metrics parser.
+   - **Valeria Hornung**: integrity validation using SHA-256 and CSV aggregation.
+6. **May 17, 2026 - Test data + visualization**
+   - **Valeria Hornung**: `scripts/generate_data.py` 50 MB dataset generator.
+   - **Maximiliano Bustamante**: `scripts/plot_results.py` chart generation.
+7. **May 18, 2026 - Final analysis and documentation**
+   - **Valeria Hornung**: `justificacion.md` technical defense narrative.
+   - **Maximiliano Bustamante**: `README.md`, run instructions, and final artifact organization.
+
 ## Requisitos
 
 - GCC disponible en PATH.
